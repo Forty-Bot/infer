@@ -1,29 +1,40 @@
 # Maintainer: yaroslav <proninyaroslav@mail.ru>
 
 pkgname=infer
-pkgver=0.8.1
+pkgver=0.12.1
 pkgrel=1
 pkgdesc="Static Analyzer by Facebook"
 arch=('x86_64')
 url="https://github.com/facebook/infer"
 license=('BSD')
-depends=('python2' 'python' 'java-environment' 'gcc>=4.7.2' 'opam>=1.2.0')
-makedepends=('git' 'rsync')
-source=("${pkgname}::git://github.com/facebook/infer.git")
-sha256sums=('SKIP')
-
+depends=(
+	'python2>=2.7'
+	'java-environment'
+	'cmake'
+	'gcc>=4.7.2'
+	'ocaml'
+	'ocaml-ansiterminal>=0.7'
+	'ocaml-atdgen>=1.6.0'
+	'ocaml-cmdliner>=1.0.0'
+	'ocaml-core'
+	'ocaml-ctypes-git>=0.9.2'
+	'ocaml-extlib-compat'
+	'ocaml-javalib>=2.3.3'
+	'ocaml-ounit=2.0.0'
+	'ocaml-parmap>=1.0_rc8'
+	'ocaml-ppx_deriving>=4.1'
+	'ocaml-sawja>=1.5.2'
+	'ocaml-xmlm>=1.2.0'
+)
+makedepends=(
+	'ocaml-findlib'	
+	'jbuilder>=1.0+beta11'
+)
+source=("https://github.com/facebook/infer/releases/download/v$pkgver/infer-linux64-v$pkgver.tar.xz")
 
 build() {
-    opam init -y --comp=4.02.3
-    opam switch 4.02.1
-    eval $(opam config env)
-
-    cd "${pkgname}"
-    git submodule update --init --recursive
-    opam update
-    opam pin add --yes --no-action infer .
-    opam install --deps-only infer
-    ./build-infer.sh
+	cd "$pkgdir/infer-linux64-v$pkgver"
+	./build-infer.sh
 }
 
 package() {
@@ -37,3 +48,4 @@ package() {
 EOF
     chmod +x "${pkgdir}/usr/bin/infer"
 }
+md5sums=('5d33e43c1f516f02ab33c85e0ed418f9')
